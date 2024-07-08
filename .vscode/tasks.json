@@ -1,0 +1,17 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Clear",
+      "type": "shell",
+      "isBackground": true,
+      "command": "rm -rf build && rm -rf managed_components && rm -rf dependencies.lock && rm -rf sdkconfig && rm -rf sdkconfig.old",
+    },
+    {
+      "label": "CMake",
+      "type": "shell",
+      "isBackground": true,
+      "command": ". esp-idf.fish && cmake -Bbuild -GNinja -DCMAKE_TOOLCHAIN_FILE=$IDF_PATH/tools/cmake/toolchain-esp32s3.cmake -DPYTHON_DEPS_CHECKED=1 -DESP_PLATFORM=1 -DIDF_TARGET=esp32s3 -DCCACHE_ENABLE=0",
+    },
+  ]
+}
