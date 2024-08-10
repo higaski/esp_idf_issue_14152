@@ -19,6 +19,9 @@ static constexpr auto read_file_toggle_gpio_num{GPIO_NUM_13};
 // IO pin which gets toggled in timer
 static constexpr auto timer_gpio_num{GPIO_NUM_14};
 
+//
+FILE* fd{NULL};
+
 gptimer_handle_t gptimer{};
 
 // Timer callback which toggles pin at 20kHz
@@ -100,17 +103,19 @@ void init_timer() {
 // Read .png file from SPIFFS
 void read_file() {
   static std::array<uint8_t, 1024uz> file_buffer;
-  auto fd{fopen("/logo.png", "r")};
   if (fd == NULL) {
-    ESP_LOGE(TAG, "Failed to open file for reading");
-    return;
+    fd = fopen("/logo.png", "r");
+    if (fd == NULL) {
+      ESP_LOGE(TAG, "Failed to open file for reading");
+      return;
+    }
   }
+  rewind(fd);
   size_t chunksize;
   do {
     if (!(chunksize = read(fileno(fd), data(file_buffer), size(file_buffer))))
       continue;
   } while (chunksize);
-  fclose(fd);
 }
 
 extern "C" void app_main() {
